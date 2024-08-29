@@ -1,161 +1,103 @@
 import 'package:flutter/material.dart';
-import '../utils/screen_utils.dart';
-import '../widgets/custom_app_bar.dart';
-import '../widgets/custom_drawer.dart';
-import '../widgets/home_body.dart';
+import '../utils/text_styles.dart';
+import '../widgets/app_bar_title.dart';
+import '../widgets/drawer_content.dart';
 import '../widgets/responsive_builder.dart';
-import '../widgets/responsive_text.dart';
-import '../widgets/title_bar.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(
-      mobile: Scaffold(
-        appBar: const TitleBar(
-          showDrawerIcon: true,
-          showRightButtons: false,
+    return Scaffold(
+      appBar: AppBar(
+        title: const AppBarTitle(title: 'Flutter \nWorld'),
+        backgroundColor: Colors.transparent,  // No background color
+        centerTitle: false,
+        actions: MediaQuery.of(context).size.width > 640
+            ? [
+          const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Center(
+              child: Text(
+                'Schedule   Message',
+                style: TextStyle(color: Colors.black),  // Text color for buttons
+              ),
+            ),
+          ),
+        ]
+            : null,
+      ),
+      drawer: MediaQuery.of(context).size.width <= 640
+          ? const Drawer(
+        child: SafeArea(
+          child: DrawerContent(),
         ),
-        drawer: const CustomDrawer(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Added padding
+      )
+          : null,  // No drawer for tablets and desktops
+      body: ResponsiveBuilder(
+        mobile: _buildMobileContent(context),
+        tablet: _buildTabletContent(context),
+        desktop: _buildDesktopContent(context),
+      ),
+    );
+  }
+
+  Widget _buildMobileContent(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('FLUTTER WEB. \n THE BASICS', style: TextStyles.getHeadline(context)),
+        const SizedBox(height: 16),
+        Text(
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod turpis rhoncus felis rhoncus sollicitudin. Mauris quam turpis, faucibus in libero nec, tristique suscipit lorem. Sed et lacinia libero, at placerat nisi. Sed et lacinia libero, at placerat nisi.',
+          style: TextStyles.getParagraph(context),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1BE28D),
+          ),
+          child: const Text(
+            'Let\'s Explore',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabletContent(BuildContext context) {
+    return _buildMobileContent(context);  // Same content as mobile
+  }
+
+  Widget _buildDesktopContent(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 5,
+          child: _buildMobileContent(context),
+        ),
+        Expanded(
+          flex: 5,
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const ResponsiveText(
-                  text: 'FLUTTER WEB. \n THE BASICS',
-                  mobileSize: 24,
-                  tabletSize: 28,
-                  desktopSize: 32,
-                  isBold: true,
-                ),
-                const SizedBox(height: 16),
-                const ResponsiveText(
-                  text: 'A responsive text that adapts to the screen size.',
-                  mobileSize: 14,
-                  tabletSize: 16,
-                  desktopSize: 18,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1BE28D),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const ResponsiveText(
-                    text: 'Lets Explore',
-                    mobileSize: 16,
-                    tabletSize: 18,
-                    desktopSize: 20,
-                  ),
-                ),
-              ],
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1BE28D),
+              ),
+              child: const Text(
+                'Let\'s Explore',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ),
-      ),
-      tablet: Scaffold(
-        appBar: const TitleBar(
-          showDrawerIcon: false,
-          showRightButtons: true,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Added padding
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const ResponsiveText(
-                  text: 'FLUTTER WEB. \n THE BASICS',
-                  mobileSize: 24,
-                  tabletSize: 28,
-                  desktopSize: 32,
-                  isBold: true,
-                ),
-                const SizedBox(height: 16),
-                const ResponsiveText(
-                  text: 'A responsive text that adapts to the screen size.',
-                  mobileSize: 14,
-                  tabletSize: 16,
-                  desktopSize: 18,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1BE28D),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const ResponsiveText(
-                    text: 'Lets Explore',
-                    mobileSize: 16,
-                    tabletSize: 18,
-                    desktopSize: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      desktop: Scaffold(
-        appBar: const TitleBar(
-          showDrawerIcon: false,
-          showRightButtons: true,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0), // Added padding
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const ResponsiveText(
-                        text: 'FLUTTER WEB. \n THE BASICS',
-                        mobileSize: 24,
-                        tabletSize: 28,
-                        desktopSize: 32,
-                        isBold: true,
-                      ),
-                      const SizedBox(height: 16),
-                      const ResponsiveText(
-                        text: 'A responsive text that adapts to the screen size.',
-                        mobileSize: 14,
-                        tabletSize: 16,
-                        desktopSize: 18,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 32),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1BE28D),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const ResponsiveText(
-                    text: 'Lets Explore',
-                    mobileSize: 16,
-                    tabletSize: 18,
-                    desktopSize: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
